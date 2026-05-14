@@ -9,6 +9,8 @@
   --r-md: 16px;
   --r-lg: 26px;
   --r-pill: 9999px;
+  --stop: #e53935;
+  --stop-dim: rgba(229, 57, 53, 0.35);
 }
 
 *,
@@ -91,7 +93,7 @@ body.focus-session .timer-block {
   transform: scale(1.07);
 }
 
-body.focus-session .digits {
+body.focus-session .digits-row {
   font-size: clamp(3rem, 14vw, 4.25rem);
   letter-spacing: 0.02em;
   transition: font-size 0.45s ease;
@@ -119,7 +121,7 @@ body.focus-session .ring:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .app-chrome,
   body.focus-session .timer-block,
-  body.focus-session .digits,
+  body.focus-session .digits-row,
   body.focus-session .phase,
   .app {
     transition-duration: 0.01ms !important;
@@ -129,7 +131,22 @@ body.focus-session .ring:focus-visible {
     transform: none;
   }
 
+  body.timer-running .digits-sec-value {
+    animation: none;
+  }
+
+  .digits-sec-hit:not(:disabled):hover .stop-overlay,
+  .digits-sec-hit:not(:disabled):focus-visible .stop-overlay {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    transition: none;
+  }
+
   .focus-toolbar {
+    animation: none;
+  }
+
+  .bottom-session-actions {
     animation: none;
   }
 }
@@ -207,6 +224,139 @@ body.focus-session .time-display {
   font-weight: 600;
   letter-spacing: 0.04em;
   font-variant-numeric: tabular-nums;
+}
+
+.digits-row {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.02em;
+}
+
+.digits-min,
+.digits-sep {
+  color: var(--fg);
+  user-select: none;
+}
+
+.digits-sec-hit {
+  position: relative;
+  font: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  font-variant-numeric: tabular-nums;
+  padding: 0.08em 0.18em 0.06em;
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--fg);
+  cursor: default;
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1),
+    border-color 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.35s ease;
+}
+
+.digits-sec-hit:disabled {
+  cursor: default;
+}
+
+.digits-sec-hit:not(:disabled) {
+  cursor: pointer;
+}
+
+.digits-sec-hit:not(:disabled):hover,
+.digits-sec-hit:not(:disabled):focus-visible {
+  transform: scale(1.06);
+  border-color: var(--stop);
+  background: var(--stop-dim);
+  box-shadow: 0 0 0 1px rgba(229, 57, 53, 0.45);
+}
+
+.digits-sec-value {
+  display: inline-block;
+  transition: opacity 0.35s ease, color 0.3s ease;
+}
+
+body.timer-running .digits-sec-value {
+  animation: secTick 1s ease-in-out infinite;
+}
+
+@keyframes secTick {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.88;
+    transform: scale(1.02);
+  }
+}
+
+.stop-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: clamp(0.55rem, 2.8vw, 0.72rem);
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  color: var(--stop);
+  pointer-events: none;
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  transition:
+    opacity 0.2s ease,
+    clip-path 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.digits-sec-hit:not(:disabled):hover .stop-overlay,
+.digits-sec-hit:not(:disabled):focus-visible .stop-overlay {
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+}
+
+.digits-sec-hit:not(:disabled):hover .digits-sec-value,
+.digits-sec-hit:not(:disabled):focus-visible .digits-sec-value {
+  opacity: 0.22;
+  color: var(--fg);
+}
+
+.digits-sec-hit:not(:disabled):active .stop-overlay {
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+}
+
+.digits-sec-hit:not(:disabled):active .digits-sec-value {
+  opacity: 0.22;
+}
+
+.bottom-session-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0.15rem;
+  animation: focusBarIn 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.btn-reset-bottom {
+  min-width: 11rem;
+  border-color: var(--stop);
+  color: var(--stop);
+  background: transparent;
+}
+
+.btn-reset-bottom:hover:not(:disabled) {
+  background: var(--stop);
+  color: var(--bg);
+  border-color: var(--stop);
 }
 
 .phase {

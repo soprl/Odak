@@ -32,7 +32,20 @@
             <circle class="ring-progress" cx="100" cy="100" r="88" id="ringProgress" fill="none" />
           </svg>
           <div class="time-display">
-            <span class="digits" id="timeDisplay">25:00</span>
+            <div class="digits digits-row" id="digitsRow" aria-live="polite">
+              <span class="digits-min" id="timeMin">25</span>
+              <span class="digits-sep" aria-hidden="true">:</span>
+              <button
+                type="button"
+                class="digits-sec-hit"
+                id="secStopBtn"
+                disabled
+                aria-label="Durdur"
+              >
+                <span class="digits-sec-value" id="timeSec">00</span>
+                <span class="stop-overlay" aria-hidden="true">DURDUR</span>
+              </button>
+            </div>
             <span class="phase" id="phaseLabel">Hazır</span>
           </div>
         </div>
@@ -72,8 +85,11 @@
       </div>
 
       <div class="focus-toolbar" id="focusToolbar" hidden>
-        <button type="button" class="btn btn-pill" id="focusToggle">Duraklat</button>
-        <button type="button" class="btn btn-pill btn-pill-muted" id="focusResetMini">Sıfırla</button>
+        <button type="button" class="btn btn-pill" id="focusToggle">Devam</button>
+      </div>
+
+      <div class="bottom-session-actions" id="bottomSessionActions" hidden>
+        <button type="button" class="btn btn-reset-bottom" id="btnResetBottom">Sıfırla</button>
       </div>
     </main>
 

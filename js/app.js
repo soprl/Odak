@@ -7,7 +7,9 @@
   const els = {
     ring: document.getElementById("ring"),
     ringProgress: document.getElementById("ringProgress"),
-    timeDisplay: document.getElementById("timeDisplay"),
+    timeMin: document.getElementById("timeMin"),
+    timeSec: document.getElementById("timeSec"),
+    secStopBtn: document.getElementById("secStopBtn"),
     phaseLabel: document.getElementById("phaseLabel"),
     btnStart: document.getElementById("btnStart"),
     btnPause: document.getElementById("btnPause"),
@@ -20,7 +22,8 @@
     confettiCanvas: document.getElementById("confettiCanvas"),
     focusToolbar: document.getElementById("focusToolbar"),
     focusToggle: document.getElementById("focusToggle"),
-    focusResetMini: document.getElementById("focusResetMini"),
+    bottomSessionActions: document.getElementById("bottomSessionActions"),
+    btnResetBottom: document.getElementById("btnResetBottom"),
   };
 
   let totalSec = 25 * 60;
@@ -32,11 +35,11 @@
   /** @type {((opts: object) => void) | null} */
   let confettiApi = null;
 
-  function formatTime(sec) {
+  function formatParts(sec) {
     const s = Math.max(0, Math.floor(sec));
     const m = Math.floor(s / 60);
     const r = s % 60;
-    return String(m).padStart(2, "0") + ":" + String(r).padStart(2, "0");
+    return { m: String(m).padStart(2, "0"), r: String(r).padStart(2, "0") };
   }
 
   function setRing(remaining, total) {
@@ -62,9 +65,18 @@
   }
 
   function updateUi() {
-    if (els.timeDisplay) els.timeDisplay.textContent = formatTime(remainingSec);
+    const { m, r } = formatParts(remainingSec);
+    if (els.timeMin) els.timeMin.textContent = m;
+    if (els.timeSec) els.timeSec.textContent = r;
     setRing(remainingSec, totalSec);
     syncPresetActive();
+
+    document.body.classList.toggle("timer-running", running && remainingSec > 0);
+
+    if (els.secStopBtn) {
+      els.secStopBtn.disabled = !running;
+      els.secStopBtn.tabIndex = running ? 0 : -1;
+    }
 
     const done = remainingSec <= 0 && totalSec > 0;
     if (els.btnStart) {
@@ -121,6 +133,18 @@
       if (tb.hidden) tb.setAttribute("inert", "");
       else tb.removeAttribute("inert");
       if (focusToggle && showBar) focusToggle.textContent = "Devam";
+    }
+
+    const bottom = els.bottomSessionActions;
+    const showBottom =
+      focusSession && !running && remainingSec > 0 && remainingSec < totalSec;
+    if (bottom) {
+      if (!showBottom && bottom.contains(document.activeElement)) {
+        /** @type {HTMLElement | null} */ (document.activeElement)?.blur();
+      }
+      bottom.hidden = !showBottom;
+      if (bottom.hidden) bottom.setAttribute("inert", "");
+      else bottom.removeAttribute("inert");
     }
   }
 
@@ -328,11 +352,18 @@
     start();
   });
 
-  els.focusResetMini?.addEventListener("click", () => {
+  els.btnResetBottom?.addEventListener("click", () => {
     reset();
   });
 
-  els.ring?.addEventListener("click", () => {
+  els.secStopBtn?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (!running) return;
+    pause();
+  });
+
+  els.ring?.addEventListener("click", (e) => {
+    if (e.target instanceof Node && els.secStopBtn?.contains(e.target)) return;
     if (!focusSession || remainingSec <= 0) return;
     if (running) pause();
     else start();
