@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Odak · Ders Zamanlayıcı</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+
+    <main class="app" id="app">
+      <div class="app-chrome">
+        <div class="app-chrome-inner">
+          <header class="header">
+            <h1 class="logo">Odak</h1>
+            <p class="tagline">Sadece süre. Başka bir şey yok.</p>
+          </header>
+        </div>
+      </div>
+
+      <section class="timer-block" aria-live="polite">
+        <div class="ring" id="ring" tabindex="-1">
+          <svg class="ring-svg" viewBox="0 0 200 200" aria-hidden="true">
+            <circle class="ring-bg" cx="100" cy="100" r="88" fill="none" />
+            <circle class="ring-progress" cx="100" cy="100" r="88" id="ringProgress" fill="none" />
+          </svg>
+          <div class="time-display">
+            <span class="digits" id="timeDisplay">25:00</span>
+            <span class="phase" id="phaseLabel">Hazır</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="app-chrome">
+        <div class="app-chrome-inner">
+          <section class="presets" aria-label="Süre seçimi">
+            <button type="button" class="btn preset" data-minutes="15">15 dk</button>
+            <button type="button" class="btn preset" data-minutes="25">25 dk</button>
+            <button type="button" class="btn preset" data-minutes="45">45 dk</button>
+            <button type="button" class="btn preset" data-minutes="60">60 dk</button>
+          </section>
+
+          <section class="custom-row" aria-label="Özel süre">
+            <label class="custom-label" for="customMin">Özel (dk)</label>
+            <input
+              id="customMin"
+              class="custom-input"
+              type="number"
+              min="1"
+              max="180"
+              value="30"
+              inputmode="numeric"
+            />
+            <button type="button" class="btn btn-outline" id="btnCustom">Ayarla</button>
+          </section>
+
+          <section class="controls" aria-label="Kontroller">
+            <button type="button" class="btn btn-primary" id="btnStart">Başlat</button>
+            <button type="button" class="btn btn-outline" id="btnPause" disabled>Duraklat</button>
+            <button type="button" class="btn btn-ghost" id="btnReset">Sıfırla</button>
+          </section>
+
+          <p class="hint"><kbd>Boşluk</kbd> başlat / duraklat · <kbd>Esc</kbd> kutuyu kapat</p>
+        </div>
+      </div>
+
+      <div class="focus-toolbar" id="focusToolbar" hidden>
+        <button type="button" class="btn btn-pill" id="focusToggle">Duraklat</button>
+        <button type="button" class="btn btn-pill btn-pill-muted" id="focusResetMini">Sıfırla</button>
+      </div>
+    </main>
+
+    <div class="overlay" id="celebrationOverlay" hidden>
+      <div class="celebration-inner">
+        <div class="mascot" id="mascot" aria-hidden="true">
+          <div class="mascot-bounce">
+            <svg class="face-svg" viewBox="0 0 120 120" role="img" aria-label="Mutlu yüz">
+              <circle class="face-circle" cx="60" cy="60" r="52" />
+              <g class="eyes">
+                <ellipse class="eye left" cx="42" cy="52" rx="6" ry="10" />
+                <ellipse class="eye right" cx="78" cy="52" rx="6" ry="10" />
+              </g>
+              <path
+                class="smile"
+                d="M38 72 Q60 94 82 72"
+                fill="none"
+                stroke-width="5"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+        </div>
+        <h2 class="congrats-title" id="congratsTitle">Tebrikler</h2>
+        <p class="congrats-sub" id="congratsSub">Bu süreyi tamamladın. Kısa bir mola hak ettin.</p>
+        <button type="button" class="btn btn-primary" id="btnDismiss">Devam</button>
+      </div>
+    </div>
+
+    <canvas id="confettiCanvas" class="confetti-canvas" aria-hidden="true"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
