@@ -92,6 +92,11 @@
   function updateFocusChrome() {
     document.body.classList.toggle("focus-session", focusSession);
 
+    document.querySelectorAll(".app-chrome").forEach((el) => {
+      if (focusSession) el.setAttribute("inert", "");
+      else el.removeAttribute("inert");
+    });
+
     const ring = els.ring;
     if (ring) {
       const canInteract = focusSession && remainingSec > 0;
@@ -109,7 +114,12 @@
     const focusToggle = els.focusToggle;
     if (tb) {
       const showBar = focusSession && remainingSec > 0 && !running;
+      if (!showBar && tb.contains(document.activeElement)) {
+        /** @type {HTMLElement | null} */ (document.activeElement)?.blur();
+      }
       tb.hidden = !showBar;
+      if (tb.hidden) tb.setAttribute("inert", "");
+      else tb.removeAttribute("inert");
       if (focusToggle && showBar) focusToggle.textContent = "Devam";
     }
   }
@@ -254,6 +264,7 @@
 
   function start() {
     if (totalSec <= 0 || remainingSec <= 0) return;
+    /** @type {HTMLElement | null} */ (document.activeElement)?.blur();
     running = true;
     focusSession = true;
     clearTick();
@@ -262,6 +273,7 @@
   }
 
   function pause() {
+    /** @type {HTMLElement | null} */ (document.activeElement)?.blur();
     running = false;
     clearTick();
     updateUi();
