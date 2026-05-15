@@ -32,19 +32,21 @@
             <circle class="ring-progress" cx="100" cy="100" r="88" id="ringProgress" fill="none" />
           </svg>
           <div class="time-display">
-            <div class="digits digits-row" id="digitsRow" aria-live="polite">
-              <span class="digits-min" id="timeMin">25</span>
-              <span class="digits-sep" aria-hidden="true">:</span>
-              <button
-                type="button"
-                class="digits-sec-hit"
-                id="secStopBtn"
-                disabled
-                aria-label="Durdur"
-              >
-                <span class="digits-sec-value" id="timeSec">00</span>
-                <span class="stop-overlay" aria-hidden="true">DURDUR</span>
-              </button>
+            <div class="time-stack">
+              <div class="digits digits-row" id="digitsRow" aria-live="polite">
+                <span class="digits-min" id="timeMin">25</span>
+                <span class="digits-sep" aria-hidden="true">:</span>
+                <button
+                  type="button"
+                  class="digits-sec-hit"
+                  id="secStopBtn"
+                  disabled
+                  aria-label="Durdur"
+                >
+                  <span class="digits-sec-value" id="timeSec">00</span>
+                </button>
+              </div>
+              <p class="ring-durdur" aria-hidden="true">durdur</p>
             </div>
             <span class="phase" id="phaseLabel">Hazır</span>
           </div>

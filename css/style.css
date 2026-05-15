@@ -135,10 +135,19 @@ body.focus-session .ring:focus-visible {
     animation: none;
   }
 
-  .digits-sec-hit:not(:disabled):hover .stop-overlay,
-  .digits-sec-hit:not(:disabled):focus-visible .stop-overlay {
-    clip-path: inset(0 0 0 0);
+  .ring:has(.digits-sec-hit:not(:disabled):hover) .ring-bg,
+  .ring:has(.digits-sec-hit:not(:disabled):hover) .ring-progress,
+  .ring:has(.digits-sec-hit:not(:disabled):focus-visible) .ring-bg,
+  .ring:has(.digits-sec-hit:not(:disabled):focus-visible) .ring-progress {
+    stroke: var(--stop);
+    transition: none;
+  }
+
+  .ring:has(.digits-sec-hit:not(:disabled):hover) .ring-durdur,
+  .ring:has(.digits-sec-hit:not(:disabled):focus-visible) .ring-durdur {
+    max-height: 2rem;
     opacity: 1;
+    transform: translateY(0.12em);
     transition: none;
   }
 
@@ -191,6 +200,7 @@ body.focus-session .ring:focus-visible {
   fill: none;
   stroke: var(--line);
   stroke-width: 4;
+  transition: stroke 0.35s ease;
 }
 
 .ring-progress {
@@ -200,7 +210,18 @@ body.focus-session .ring:focus-visible {
   stroke-linecap: round;
   stroke-dasharray: 553.1;
   stroke-dashoffset: 0;
-  transition: stroke-dashoffset 0.35s ease;
+  transition:
+    stroke-dashoffset 0.35s ease,
+    stroke 0.35s ease;
+}
+
+.ring:has(.digits-sec-hit:not(:disabled):hover) .ring-bg,
+.ring:has(.digits-sec-hit:not(:disabled):hover) .ring-progress,
+.ring:has(.digits-sec-hit:not(:disabled):focus-visible) .ring-bg,
+.ring:has(.digits-sec-hit:not(:disabled):focus-visible) .ring-progress,
+.ring:has(.digits-sec-hit:not(:disabled):active) .ring-bg,
+.ring:has(.digits-sec-hit:not(:disabled):active) .ring-progress {
+  stroke: var(--stop);
 }
 
 .time-display {
@@ -212,6 +233,48 @@ body.focus-session .ring:focus-visible {
   justify-content: center;
   gap: 0.35rem;
   transition: gap 0.35s ease;
+}
+
+.time-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+}
+
+.ring-durdur {
+  margin: 0;
+  padding: 0;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: clamp(0.68rem, 2.4vw, 0.82rem);
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  text-transform: lowercase;
+  color: var(--stop);
+  line-height: 1.2;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.32s ease,
+    max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ring:has(.digits-sec-hit:not(:disabled):hover) .ring-durdur,
+.ring:has(.digits-sec-hit:not(:disabled):focus-visible) .ring-durdur,
+.ring:has(.digits-sec-hit:not(:disabled):active) .ring-durdur {
+  max-height: 2rem;
+  opacity: 1;
+  transform: translateY(0.12em);
+}
+
+body.focus-session .time-stack {
+  gap: 0.12rem;
 }
 
 body.focus-session .time-display {
@@ -297,41 +360,10 @@ body.timer-running .digits-sec-value {
   }
 }
 
-.stop-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-sans);
-  font-size: clamp(0.55rem, 2.8vw, 0.72rem);
-  font-weight: 600;
-  letter-spacing: 0.28em;
-  text-indent: 0.28em;
-  color: var(--stop);
-  pointer-events: none;
-  opacity: 0;
-  clip-path: inset(0 100% 0 0);
-  transition:
-    opacity 0.2s ease,
-    clip-path 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.digits-sec-hit:not(:disabled):hover .stop-overlay,
-.digits-sec-hit:not(:disabled):focus-visible .stop-overlay {
-  opacity: 1;
-  clip-path: inset(0 0 0 0);
-}
-
 .digits-sec-hit:not(:disabled):hover .digits-sec-value,
 .digits-sec-hit:not(:disabled):focus-visible .digits-sec-value {
   opacity: 0.22;
   color: var(--fg);
-}
-
-.digits-sec-hit:not(:disabled):active .stop-overlay {
-  opacity: 1;
-  clip-path: inset(0 0 0 0);
 }
 
 .digits-sec-hit:not(:disabled):active .digits-sec-value {
